@@ -11,9 +11,7 @@
     "build-storybook": "build-storybook",
     "build": "node scripts/build.js",
     "build-types": "yarn tsc -d --emitDeclarationOnly --outDir types",
-    "release": "rollout",
-    "test:all": "yarn cypress open",
-    "test": "cypress open --config integrationFolder=cypress/integration/components"
+    "release": "rollout"
   },
   "author": "mytabworks",
   "license": "ISC",
