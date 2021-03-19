@@ -44,36 +44,24 @@ function createDimension<C extends React.FunctionComponent<any>>(Component: C, {
 
 		const finalNode = typeof node === 'function' ? node(props) : node
 
-		const wrapper = finalNode.appendChild(document.createElement('div'))
+		const wrapperNode = finalNode.appendChild(document.createElement('div'))
 
 		if(typeof manipulateWrapperNode === 'function') {
 
-			manipulateWrapperNode(wrapper, props)
+			manipulateWrapperNode(wrapperNode, props)
 
 		}
-
-		const promise = new Promise((resolve, reject) => {
-
-			ReactDOM.render(
-				<DimensionContext.Provider value={{resolve, reject}}>
-					<Component
-						{...(props as any)}
-					/>
-				</DimensionContext.Provider>,
-				wrapper
-			)
-		})
 
 		const close = () => {
 			setTimeout(() => {
 
-				ReactDOM.unmountComponentAtNode(wrapper)
+				ReactDOM.unmountComponentAtNode(wrapperNode)
 
 				setTimeout(() => {
 
-					if (finalNode.contains(wrapper)) {
+					if (finalNode.contains(wrapperNode)) {
 
-						finalNode.removeChild(wrapper)
+						finalNode.removeChild(wrapperNode)
 
 					}
 				})
@@ -81,8 +69,26 @@ function createDimension<C extends React.FunctionComponent<any>>(Component: C, {
 			}, delay)
 		}
 
-		return promise.finally(() => {
+		const promisify = new Promise((resolve, reject) => {
+
+			ReactDOM.render(
+				<DimensionContext.Provider value={{resolve, reject}}>
+					<Component
+						{...(props as any)}
+					/>
+				</DimensionContext.Provider>,
+				wrapperNode
+			)
+		})
+
+		return promisify
+		.then((value) => {
 			close()
+			return value
+		})
+		.catch((value) => {
+			close()
+			return Promise.reject(value)
 		})
 	}
 }
