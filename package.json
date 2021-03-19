@@ -1,8 +1,8 @@
 {
   "name": "dymension",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "it is a react utility to create dimension which is commonly use in modal or toast.",
-  "main": "Dymension/index.js",
+  "main": "Dymension/",
   "files": [
     "lib"
   ],
