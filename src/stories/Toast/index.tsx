@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames'
-import createDimension, { useDimension } from '../../components/Dymension'
+import createDimension, { useDimension } from '../../components'
 import './index.scss'
 
 interface ConfirmProps {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Button } from "react-bootstrap"
-import createDimension, { useDimension } from '../../components/Dymension'
+import createDimension, { useDimension } from '../../components'
 
 interface ConfirmProps {
     title: React.ReactNode, 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Button, Form } from "react-bootstrap"
-import createDimension, { useDimension } from '../../components/Dymension'
+import createDimension, { useDimension } from '../../components'
 
 type StateType = {
     value: string;
