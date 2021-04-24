@@ -3,9 +3,12 @@ import classNames from 'classnames'
 import createDimension, { useDimension } from '../../components'
 import './index.scss'
 
-interface ConfirmProps {
+interface ToastProps {
     key?: string;
     body: React.ReactNode;
+    className?: string;
+    classEnter?: string;
+    classExit?: string;
     variant?: 'primary' | 'success' | 'danger' | 'warning' | 'info';
     placement?: 'top' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     duration?: number;
@@ -15,8 +18,11 @@ interface ConfirmProps {
     onUnmount?: () => void;
 }
 
-export const Toast: React.FunctionComponent<ConfirmProps> = ({ 
+export const Toast: React.FunctionComponent<ToastProps> = ({ 
     body,
+    className,
+    classEnter,
+    classExit,
     variant,
     duration,
     dismissible,
@@ -53,7 +59,7 @@ export const Toast: React.FunctionComponent<ConfirmProps> = ({
     }, [])
 
     return (
-        <div className={classNames('toaster', { 'fade-toast-in': show, 'fade-toast-out': !show }, variant && `toaster-${variant}`)}>
+        <div className={classNames('toaster', { [classEnter]: show, [classExit]: !show }, variant && `toaster-${variant}`, className)}>
             <div className="toaster-content">
                 {body}
                 {dismissible && <button className="toaster-content-close" onClick={resolve}>&times;</button>}
@@ -64,7 +70,9 @@ export const Toast: React.FunctionComponent<ConfirmProps> = ({
 
 Toast.defaultProps = {
     dismissible: false,
-    duration: 6000
+    duration: 6000,
+    classEnter: 'fade-toast-in',
+    classExit: 'fade-toast-out'
 }
 
 const createNode = (parent = document.body) => {
