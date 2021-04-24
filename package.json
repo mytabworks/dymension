@@ -1,8 +1,10 @@
 {
   "name": "dymension",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "it is a react utility to create dimension which is commonly use in modal or toast.",
-  "main": "Dymension/",
+  "main": "./cjs",
+  "module": "./esm",
+  "types": "./esm",
   "files": [
     "lib"
   ],
