@@ -54,6 +54,6 @@ export const Confirm: React.FunctionComponent<ConfirmProps> = ({
     )
 }
 
-export default createDimension(Confirm, {
+export default createDimension<boolean, typeof Confirm>(Confirm, {
     delay: 1000
 })

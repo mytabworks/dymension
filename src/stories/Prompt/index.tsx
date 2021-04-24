@@ -88,6 +88,6 @@ Prompt.defaultProps = {
     cancel: "No",
     requireMessage: 'The field is required'
 }
-export default createDimension(Prompt, {
+export default createDimension<string, typeof Prompt>(Prompt, {
     delay: 1000
 })
