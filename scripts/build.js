@@ -2,9 +2,10 @@ const { green, cyan, red } = require("chalk");
 const webpack = require("webpack");
 
 const path = require("path");
+const fs= require("fs");
 const fse = require("fs-extra");
 const execa = require("execa");
-const cherryPick = require("../config/cherry-picker").default;
+// const cherryPick = require("../config/cherry-picker").default;
 const styleConfig = require("../config/style.webpack.config");
 
 const root = path.join(__dirname, "../");
@@ -26,9 +27,13 @@ const promise = (name, callback) => async () => {
 const shell = (cmd) =>
   execa(cmd, { stdio: ["pipe", "pipe", "inherit"], shell: true });
 
-const copyDeclaration = promise("copying componetize index.d.ts", () =>
-  shell(`yarn babel ${root}/index.d.ts --out-dir ${libRoot} --copy-files`)
-);
+const generatingModuleDeclaration = promise("generating lib/index.d.ts base on root index.d.ts and types/index.d.ts combined", () => {
+  const componentType = fs.readFileSync(`${typesRoot}/index.d.ts`); 
+  // This text will be written on file input.text 
+  const declaration = fs.readFileSync(`${root}/index.d.ts`)
+  // write file declaration lib/index.d.ts
+  fs.writeFileSync(`${libRoot}/index.d.ts`, `${declaration}\n${componentType}`); 
+});
 
 const buildTypes = promise("generating components ts declarations", () =>
   shell(`yarn build-types`)
@@ -67,23 +72,23 @@ const buildStyle = promise(
     })
 );
 
-const buildDirectories = promise("connecting exposed directories in modules", () =>
-  cherryPick({
-    inputDir: "../src/components",
-    cjsDir: "cjs",
-    esmDir: "esm",
-    typesDir: "esm",
-    cwd: libRoot,
-  })
-);
+// const buildDirectories = promise("connecting exposed directories in modules", () =>
+//   cherryPick({
+//     inputDir: "../src/components",
+//     cjsDir: "cjs",
+//     esmDir: "esm",
+//     typesDir: "esm",
+//     cwd: libRoot,
+//   })
+// );
 
 clean();
 
 Promise.resolve(true)
-  .then(copyDeclaration)
   .then(buildTypes)
   .then(() => Promise.all([buildLib(), buildEsm(), buildStyle()]))
-  .then(buildDirectories)
+  .then(generatingModuleDeclaration)
+  // .then(buildDirectories) /*remove cherry pick because it is only direct module without folders module*/
   .catch((err) => {
     if (err) console.error(red(err.stack || err.toString()));
     process.exit(1);
